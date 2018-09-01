@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
-public class Debug : MonoBehaviour
-{
+public class Debug : MonoBehaviour {
     [Range(1, 20)]
     [SerializeField]
     int SubDivide = 1;
@@ -16,26 +14,13 @@ public class Debug : MonoBehaviour
     public Material defaultMaterial;
     public Vector3 translator;
     Global global;
-    Dictionary<Face, GameObject> faceGo;
-
+    Dictionary<Face, GameObject> faceGo = new Dictionary<Face, GameObject>();
     public GameObject pointgo ;
 
-    void Start()
-    {
-        faceGo = new Dictionary<Face, GameObject>();
+    void Start() {
         global = new Global();
         Icosahedron icosahedron = new Icosahedron(global, SubDivide, Spherize, Radius);
-        //RenderSegments(icosahedron);
-        //RenderFaces(icosahedron);
-        //RenderHexes(icosahedron);
-       // foreach (var hex in icosahedron.Hexagons)
-     //   {
-     //       foreach (var point in hex.points)
-     //       {
-    //            VisualizePoint(point);
-    //            UnityEngine.Debug.Log(point);
-   //         }
-      //  }
+
         foreach (var point in icosahedron.HexagonPoints)
         {
             VisualizePoint(point);
@@ -45,8 +30,7 @@ public class Debug : MonoBehaviour
         gameObject.transform.Translate(translator);
     }
 
-    void RenderSegments(Icosahedron icos)
-    {
+    void RenderSegments(Icosahedron icos) {
         GameObject SegmentParent = new GameObject("SegmentParent");
         SegmentParent.transform.SetParent(gameObject.transform);
         foreach (var seg in icos.global.segments)
@@ -62,8 +46,7 @@ public class Debug : MonoBehaviour
         }
     }
 
-    void RenderSubFaces(Icosahedron icos)
-    {
+    void RenderSubFaces(Icosahedron icos) {
         GameObject FaceParent = new GameObject("SubFaceParent");
         FaceParent.transform.SetParent(gameObject.transform);
 
@@ -72,7 +55,6 @@ public class Debug : MonoBehaviour
             for (int j = 0; j < icos.subdividemp * icos.subdividemp; j++)
             {
                 var verticies = icos.subFaces[i][j].getVertices();
-
 
                 GameObject face = new GameObject("face");
                 face.transform.SetParent(FaceParent.transform);
@@ -100,8 +82,7 @@ public class Debug : MonoBehaviour
 
     }
 
-    void  VisualizePoint(Point point)
-    {
+    void  VisualizePoint(Point point) {
 
         if (point != null)
         {
@@ -110,8 +91,7 @@ public class Debug : MonoBehaviour
         }
     }
 
-    void RenderFaces(Icosahedron icos)
-    {
+    void RenderFaces(Icosahedron icos) {
         GameObject FaceParent = new GameObject("FaceParent");
         FaceParent.transform.SetParent(gameObject.transform);
 
@@ -135,12 +115,11 @@ public class Debug : MonoBehaviour
             mesh.RecalculateNormals();
 
             meshrenderer.material = defaultMaterial;
-            face.transform.localScale = 0.95f * Vector3.one; 
+            face.transform.localScale = 0.95f * Vector3.one;
         }
     }
 
-    void RenderHexes(Icosahedron icosahedron)
-    {
+    void RenderHexes(Icosahedron icosahedron) {
         GameObject FaceParent = new GameObject("FaceParent");
         FaceParent.transform.SetParent(gameObject.transform);
 
@@ -166,17 +145,13 @@ public class Debug : MonoBehaviour
         }
     }
 
-    void Update()
-    {
+    void Update() {
         //RandomFaceFlip();
-
         Rotating();
     }
 
     Vector3 Rotator;
-
-    void Rotating()
-    {
+    void Rotating() {
         Rotator.y += 10 * Time.deltaTime;
         if (Rotator.y >= 360)
         {
@@ -186,9 +161,7 @@ public class Debug : MonoBehaviour
     }
 
     //Flipping things
-
-    void RandomFaceFlip()
-    {
+    void RandomFaceFlip() {
         //Random flipping
         var face = global.icosahedron.subFaces[Random.Range(0, 20)][Random.Range(0, 4)];
         face.Flip();
@@ -199,16 +172,10 @@ public class Debug : MonoBehaviour
     }
 
     //Accordingly to the name
-    void FlipMesh(Face face)
-    {
+    void FlipMesh(Face face) {
         face.Flip();
-
         var mesh = faceGo[face].GetComponent<MeshFilter>().mesh;
         mesh.vertices = face.getVertices();
         faceGo[face].GetComponent<MeshFilter>().mesh.RecalculateNormals();
     }
-
-
-
-
 }
